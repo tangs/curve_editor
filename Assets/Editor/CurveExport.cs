@@ -50,8 +50,15 @@ public class CurveExport
         var objs = scene.GetRootGameObjects();
         var lineInfos = Resources.FindObjectsOfTypeAll<LineInfo>();
         var infos = new FishLines();
+        var lineNames = new HashSet<string>();
         foreach (var info in lineInfos)
         {
+            if (lineNames.Contains(info.lineName))
+            {
+                Debug.LogError($"line name repetition:{info.lineName}");
+                return;
+            }
+            lineNames.Add(info.lineName);
             var path = info.GetComponent<EasySplinePath2D>();
             path.SetUp();
             var points = path.points;
