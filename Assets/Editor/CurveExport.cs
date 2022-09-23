@@ -23,9 +23,10 @@ public class CurveExport
     [Serializable]
     class FishLine
     {
+        public bool isCurve = true;
         public string name;
         public float baseSpeed;
-        public List<Point> Points = new();
+        public List<Point> points = new();
         public List<float> distances = new();
     }
 
@@ -60,6 +61,7 @@ public class CurveExport
             }
             lineNames.Add(info.lineName);
             var path = info.GetComponent<EasySplinePath2D>();
+            path.spacing = 0.05f;
             path.SetUp();
             var points = path.points;
             var distances = path.distances;
@@ -73,13 +75,13 @@ public class CurveExport
             }
             foreach (var point in points)
             {
-                fishLine.Points.Add(new Point(point.x * 100.0f, point.y * 100.0f));
+                fishLine.points.Add(new Point(point.x * 100.0f, point.y * 100.0f));
             }
             infos.fishLines.Add(fishLine);
         }
-        string json = JsonUtility.ToJson(infos, true);
+        string json = JsonUtility.ToJson(infos, false);
         string folder = $"{Application.dataPath}/../Output";
-        string filepath = $"{folder}/fishLines.json.txt";
+        string filepath = $"{folder}/fishLinesCurve.json";
         CreateIfDirectoryNotExists(folder);
         StreamWriter writer = new StreamWriter(filepath, false);
         writer.Write(json);
